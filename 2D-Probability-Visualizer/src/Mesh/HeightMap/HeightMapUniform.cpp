@@ -24,9 +24,8 @@ void HeightMapUniform::Generate()
 
 double HeightMapUniform::calcHeight(double pos)
 {
-	double height = 1 / (m_End - m_Start);
 	if (pos < m_Start || pos > m_End)
 		return 0;
 	else
-		return height;
+		return 1 / (m_End - m_Start);
 }

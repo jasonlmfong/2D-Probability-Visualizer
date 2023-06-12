@@ -14,8 +14,14 @@
 #include "renderer/Shader.h"
 #include "renderer/Camera.h"
 #include "Mesh/HeightMap/HeightMap.h"
-#include "Mesh/HeightMap/HeightMapNormal.h"
 #include "Mesh/HeightMap/HeightMapUniform.h"
+#include "Mesh/HeightMap/HeightMapNormal.h"
+#include "Mesh/HeightMap/HeightMapExpo.h"
+#include "Mesh/HeightMap/HeightMapGamma.h"
+#include "Mesh/HeightMap/HeightMapBeta.h"
+#include "Mesh/HeightMap/HeightMapChiSq.h"
+#include "Mesh/HeightMap/HeightMapT.h"
+#include "Mesh/HeightMap/HeightMapF.h"
 #include "Mesh/Mesh.h"
 
     int main()
@@ -35,7 +41,13 @@
     enum probMode
     {
         UNIFORM,
-        NORMAL
+        NORMAL,
+        EXPONENTIAL,
+        GAMMA,
+        BETA,
+        CHISQUARED,
+        TDIST,
+        FDIST
     };
 
     int xCurrMode = NORMAL;
@@ -81,17 +93,47 @@
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // uniform mode variables
+    float x_start = -1;
+    float x_end = 1;
+    float y_start = -1;
+    float y_end = 1;
+
     // normal mode variables
     float x_mu = 0;
     float x_sigma = 1;
     float y_mu = 0;
     float y_sigma = 1;
 
-    // uniform mode variables
-    float x_start = -1;
-    float x_end = 1;
-    float y_start = -1;
-    float y_end = 1;
+    // exponential mode variables
+    float x_lambda = 1;
+    float y_lambda = 1;
+
+    // gamma mode variables
+    float x_G_alpha = 1;
+    float x_G_beta = 1;
+    float y_G_alpha = 1;
+    float y_G_beta = 1;
+
+    // beta mode variables
+    float x_B_alpha = 1;
+    float x_B_beta = 1;
+    float y_B_alpha = 1;
+    float y_B_beta = 1;
+
+    // chi sqaured mode variables
+    int x_k = 1;
+    int y_k = 1;
+
+    // T mode variables
+    float x_nu = 1;
+    float y_nu = 1;
+
+    // F mode variables
+    int x_d1 = 1;
+    int x_d2 = 1;
+    int y_d1 = 1;
+    int y_d2 = 1;
 
     // wireframe mode
     bool wireframe = false;
@@ -173,6 +215,12 @@
         ImGui::Text("x-axis Probability distribution Type:");
         ImGui::RadioButton("Uniform", &xCurrMode, UNIFORM);
         ImGui::RadioButton("Normal", &xCurrMode, NORMAL);
+        ImGui::RadioButton("Exponential", &xCurrMode, EXPONENTIAL);
+        ImGui::RadioButton("Gamma", &xCurrMode, GAMMA);
+        ImGui::RadioButton("Beta", &xCurrMode, BETA);
+        ImGui::RadioButton("Chi Sqaured", &xCurrMode, CHISQUARED);
+        ImGui::RadioButton("T", &xCurrMode, TDIST);
+        ImGui::RadioButton("F", &xCurrMode, FDIST);
         switch (xCurrMode) // display controls for current probability dist function and regenerate heightmap
         {
         case UNIFORM:
@@ -185,6 +233,33 @@
             ImGui::SliderFloat("x sigma", &x_sigma, 0, 5);
             xHeightMap = HeightMapNormal(mapWidth, x_mu, x_sigma);
             break;
+        case EXPONENTIAL:
+            ImGui::SliderFloat("x lambda", &x_lambda, 0, 5);
+            xHeightMap = HeightMapExpo(mapWidth, x_lambda);
+            break;
+        case GAMMA:
+            ImGui::SliderFloat("x alpha", &x_G_alpha, 0, 5);
+            ImGui::SliderFloat("x beta", &x_G_beta, 0, 5);
+            xHeightMap = HeightMapGamma(mapWidth, x_G_alpha, x_G_beta);
+            break;
+        case BETA:
+            ImGui::SliderFloat("x alpha", &x_B_alpha, 0, 5);
+            ImGui::SliderFloat("x beta", &x_B_beta, 0, 5);
+            xHeightMap = HeightMapBeta(mapWidth, x_B_alpha, x_B_beta);
+            break;
+        case CHISQUARED:
+            ImGui::SliderInt("x k", &x_k, 1, 10);
+            xHeightMap = HeightMapChiSq(mapWidth, x_k);
+            break;
+        case TDIST:
+            ImGui::SliderFloat("x nu", &x_nu, 0, 10);
+            xHeightMap = HeightMapT(mapWidth, x_nu);
+            break;
+        case FDIST:
+            ImGui::SliderInt("x d1", &x_d1, 1, 50);
+            ImGui::SliderInt("x d2", &x_d2, 1, 50);
+            xHeightMap = HeightMapF(mapWidth, x_d1, x_d2);
+            break;
         }
         ImGui::End();
         
@@ -193,6 +268,12 @@
         ImGui::Text("y-axis Probability distribution Type:");
         ImGui::RadioButton("Uniform", &yCurrMode, UNIFORM);
         ImGui::RadioButton("Normal", &yCurrMode, NORMAL);
+        ImGui::RadioButton("Exponential", &yCurrMode, EXPONENTIAL);
+        ImGui::RadioButton("Gamma", &yCurrMode, GAMMA);
+        ImGui::RadioButton("Beta", &yCurrMode, BETA);
+        ImGui::RadioButton("Chi Sqaured", &yCurrMode, CHISQUARED);
+        ImGui::RadioButton("T", &yCurrMode, TDIST);
+        ImGui::RadioButton("F", &yCurrMode, FDIST);
         switch (yCurrMode) // display controls for current probability dist function and regenerate heightmap
         {
         case UNIFORM:
@@ -204,6 +285,33 @@
             ImGui::SliderFloat("y mu", &y_mu, -5, 5);
             ImGui::SliderFloat("y sigma", &y_sigma, 0, 5);
             yHeightMap = HeightMapNormal(mapLength, y_mu, y_sigma);
+            break;
+        case EXPONENTIAL:
+            ImGui::SliderFloat("y lambda", &y_lambda, 0, 5);
+            yHeightMap = HeightMapExpo(mapLength, y_lambda);
+            break;
+        case GAMMA:
+            ImGui::SliderFloat("y alpha", &y_G_alpha, 0, 5);
+            ImGui::SliderFloat("y beta", &y_G_beta, 0, 5);
+            yHeightMap = HeightMapGamma(mapLength, y_G_alpha, y_G_beta);
+            break;
+        case BETA:
+            ImGui::SliderFloat("y alpha", &y_B_alpha, 0, 5);
+            ImGui::SliderFloat("y beta", &y_B_beta, 0, 5);
+            yHeightMap = HeightMapBeta(mapLength, y_B_alpha, y_B_beta);
+            break;
+        case CHISQUARED:
+            ImGui::SliderInt("y k", &y_k, 1, 10);
+            yHeightMap = HeightMapChiSq(mapLength, y_k);
+            break;
+        case TDIST:
+            ImGui::SliderFloat("y nu", &y_nu, 0, 10);
+            yHeightMap = HeightMapT(mapLength, y_nu);
+            break;
+        case FDIST:
+            ImGui::SliderInt("y d1", &y_d1, 1, 50);
+            ImGui::SliderInt("y d2", &y_d2, 1, 50);
+            yHeightMap = HeightMapF(mapLength, y_d1, y_d2);
             break;
         }
         ImGui::End();
