@@ -25,6 +25,7 @@ vec3 getRGB(float height)
 
     switch(i) {
     case 0:
+    default:
         rgb = vec3(val, t, p);
         break;
     case 1:
@@ -41,7 +42,6 @@ vec3 getRGB(float height)
 		rgb = vec3(t, p, val);
         break;
     case 5:
-    default:
         rgb = vec3(val, p, q);
         break;
     }
