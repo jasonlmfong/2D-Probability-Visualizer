@@ -1,13 +1,13 @@
 #include "HeightMapF.h"
 
-HeightMapF::HeightMapF(int size)
-	: HeightMap(size), m_D1(1), m_D2(1)
+HeightMapF::HeightMapF(int size, int min, int max)
+	: HeightMap(size, min, max), m_D1(1), m_D2(1)
 {
 	Generate();
 }
 
-HeightMapF::HeightMapF(int size, double d1, double d2)
-	: HeightMap(size), m_D1(d1), m_D2(d2)
+HeightMapF::HeightMapF(int size, int min, int max, double d1, double d2)
+	: HeightMap(size,min, max), m_D1(d1), m_D2(d2)
 {
 	Generate();
 }
@@ -17,7 +17,7 @@ void HeightMapF::Generate()
 	for (int i = 0; i < m_Size; i++)
 	{
 		double ratio = (double)i / (m_Size - 1);
-		double pos = 20 * ratio - 10;
+		double pos = m_Diff * ratio + m_Min;
 		m_Map[i] = calcF(pos);
 	}
 }

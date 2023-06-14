@@ -1,13 +1,13 @@
 #include "HeightMapUniform.h"
 
-HeightMapUniform::HeightMapUniform(int size)
-	: HeightMap(size), m_Start(-1), m_End(1)
+HeightMapUniform::HeightMapUniform(int size, int min, int max)
+	: HeightMap(size, min, max), m_Start(-1), m_End(1)
 {
 	Generate();
 }
 
-HeightMapUniform::HeightMapUniform(int size, double start, double end)
-	: HeightMap(size), m_Start(start), m_End(end)
+HeightMapUniform::HeightMapUniform(int size, int min, int max, double start, double end)
+	: HeightMap(size, min, max), m_Start(start), m_End(end)
 {
 	Generate();
 }
@@ -17,7 +17,7 @@ void HeightMapUniform::Generate()
 	for (int i = 0; i < m_Size; i++)
 	{
 		double ratio = (double)i / (m_Size - 1);
-		double pos = 20 * ratio - 10;
+		double pos = m_Diff * ratio + m_Min;
 		m_Map[i] = calcHeight(pos);
 	}
 }

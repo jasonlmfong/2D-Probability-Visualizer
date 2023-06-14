@@ -1,13 +1,13 @@
 #include "HeightMapExpo.h"
 
-HeightMapExpo::HeightMapExpo(int size)
-	: HeightMap(size), m_Lambda(1)
+HeightMapExpo::HeightMapExpo(int size, int min, int max)
+	: HeightMap(size, min, max), m_Lambda(1)
 {
 	Generate();
 }
 
-HeightMapExpo::HeightMapExpo(int size, double lambda)
-	: HeightMap(size), m_Lambda(lambda)
+HeightMapExpo::HeightMapExpo(int size, int min, int max, double lambda)
+	: HeightMap(size, min, max), m_Lambda(lambda)
 {
 	Generate();
 }
@@ -17,7 +17,7 @@ void HeightMapExpo::Generate()
 	for (int i = 0; i < m_Size; i++)
 	{
 		double ratio = (double)i / (m_Size - 1);
-		double pos = 20 * ratio - 10;
+		double pos = m_Diff * ratio + m_Min;
 		m_Map[i] = calcExpo(pos);
 	}
 }

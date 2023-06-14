@@ -5,8 +5,8 @@
 class HeightMapGamma : public HeightMap
 {
 public:
-	HeightMapGamma(int size);
-	HeightMapGamma(int size, double alpha, double beta);
+	HeightMapGamma(int size, int min, int max);
+	HeightMapGamma(int size, int min, int max, double alpha, double beta);
 
 	void Generate() override;
 private:

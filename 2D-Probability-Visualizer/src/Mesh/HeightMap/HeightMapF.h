@@ -5,8 +5,8 @@
 class HeightMapF : public HeightMap
 {
 public:
-	HeightMapF(int size);
-	HeightMapF(int size, double d1, double d2);
+	HeightMapF(int size, int min, int max);
+	HeightMapF(int size, int min, int max, double d1, double d2);
 
 	void Generate() override;
 private:

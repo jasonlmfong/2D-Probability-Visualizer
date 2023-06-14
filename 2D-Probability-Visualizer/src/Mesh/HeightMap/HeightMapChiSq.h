@@ -5,8 +5,8 @@
 class HeightMapChiSq : public HeightMap
 {
 public:
-	HeightMapChiSq(int size);
-	HeightMapChiSq(int size, int k);
+	HeightMapChiSq(int size, int min, int max);
+	HeightMapChiSq(int size, int min, int max, int k);
 
 	void Generate() override;
 private:

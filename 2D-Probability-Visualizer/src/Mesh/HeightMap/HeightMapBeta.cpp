@@ -1,13 +1,13 @@
 #include "HeightMapBeta.h"
 
-HeightMapBeta::HeightMapBeta(int size)
-	: HeightMap(size), m_Alpha(1), m_Beta(1)
+HeightMapBeta::HeightMapBeta(int size, int min, int max)
+	: HeightMap(size, min, max), m_Alpha(1), m_Beta(1)
 {
 	Generate();
 }
 
-HeightMapBeta::HeightMapBeta(int size, double alpha, double beta)
-	: HeightMap(size), m_Alpha(alpha), m_Beta(beta)
+HeightMapBeta::HeightMapBeta(int size, int min, int max, double alpha, double beta)
+	: HeightMap(size, min, max), m_Alpha(alpha), m_Beta(beta)
 {
 	Generate();
 }
@@ -17,7 +17,7 @@ void HeightMapBeta::Generate()
 	for (int i = 0; i < m_Size; i++)
 	{
 		double ratio = (double)i / (m_Size - 1);
-		double pos = 20 * ratio - 10;
+		double pos = m_Diff * ratio + m_Min;
 		m_Map[i] = calcBeta(pos);
 	}
 }

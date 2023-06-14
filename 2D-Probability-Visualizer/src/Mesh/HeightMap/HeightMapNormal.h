@@ -6,8 +6,8 @@
 class HeightMapNormal : public HeightMap
 {
 public:
-	HeightMapNormal(int size);
-	HeightMapNormal(int size, double mean, double std);
+	HeightMapNormal(int size, int min, int max);
+	HeightMapNormal(int size, int min, int max, double mean, double std);
 
 	void Generate() override;
 private:

@@ -4,8 +4,8 @@
 class HeightMapExpo : public HeightMap
 {
 public:
-	HeightMapExpo(int size);
-	HeightMapExpo(int size, double lambda);
+	HeightMapExpo(int size, int min, int max);
+	HeightMapExpo(int size, int min, int max, double lambda);
 
 	void Generate() override;
 private:

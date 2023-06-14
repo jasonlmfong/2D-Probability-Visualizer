@@ -4,8 +4,8 @@
 class HeightMapUniform : public HeightMap
 {
 public:
-	HeightMapUniform(int size);
-	HeightMapUniform(int size, double start, double end);
+	HeightMapUniform(int size, int min, int max);
+	HeightMapUniform(int size, int min, int max, double start, double end);
 
 	void Generate() override;
 private:

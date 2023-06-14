@@ -53,8 +53,11 @@
     int xCurrMode = NORMAL;
     int yCurrMode = NORMAL;
 
-    HeightMap xHeightMap = HeightMapNormal(mapWidth);
-    HeightMap yHeightMap = HeightMapNormal(mapLength);
+    std::vector<int> x_range = { -5, 5 };
+    std::vector<int> y_range = { -5, 5 };
+
+    HeightMap xHeightMap = HeightMapNormal(mapWidth, x_range[0], x_range[1], 0, 1);
+    HeightMap yHeightMap = HeightMapNormal(mapLength, y_range[0], y_range[1], 0, 1);
 
     Mesh functionMesh(xHeightMap, yHeightMap);
     
@@ -198,10 +201,18 @@
         ImGui::NewFrame();
 
         ImGui::Begin("Display parameters");
-        ImGui::SliderInt("Width", &mapWidth, 25, 75);
-        ImGui::SliderInt("Length", &mapLength, 25, 75);
+        ImGui::SliderInt2("X range", &x_range[0], -20, 20);
+        ImGui::SliderInt2("Y range", &y_range[0], -20, 20);
+
+        ImGui::Spacing();
+
+        ImGui::SliderInt("X details", &mapWidth, 25, 75);
+        ImGui::SliderInt("Y details", &mapLength, 25, 75);
+
+        ImGui::Spacing();
+
         ImGui::Text("Options:");
-        if (ImGui::Checkbox("Wireframe", &wireframe))
+        if (ImGui::Checkbox("Wireframe Mode", &wireframe))
         {
             if (wireframe)
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // wireframe mode
@@ -210,9 +221,9 @@
         }
         ImGui::End();
 
-        ImGui::Begin("X parameters");
+        ImGui::Begin("X controls");
         // let user choose the probabiltiy distribution function
-        ImGui::Text("x-axis Probability distribution Type:");
+        ImGui::Text("Probability distribution Type:");
         ImGui::RadioButton("Uniform", &xCurrMode, UNIFORM);
         ImGui::RadioButton("Normal", &xCurrMode, NORMAL);
         ImGui::RadioButton("Exponential", &xCurrMode, EXPONENTIAL);
@@ -221,51 +232,56 @@
         ImGui::RadioButton("Chi Sqaured", &xCurrMode, CHISQUARED);
         ImGui::RadioButton("T", &xCurrMode, TDIST);
         ImGui::RadioButton("F", &xCurrMode, FDIST);
+
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        ImGui::Text("Distribution parameters");
         switch (xCurrMode) // display controls for current probability dist function and regenerate heightmap
         {
         case UNIFORM:
-            ImGui::SliderFloat("x start", &x_start, -5, 5);
-            ImGui::SliderFloat("x end", &x_end, -5, 5);
-            xHeightMap = HeightMapUniform(mapWidth, x_start, x_end);
+            ImGui::SliderFloat("start", &x_start, -5, 5);
+            ImGui::SliderFloat("end", &x_end, -5, 5);
+            xHeightMap = HeightMapUniform(mapWidth, x_range[0], x_range[1], x_start, x_end);
             break;
         case NORMAL:
-            ImGui::SliderFloat("x mu", &x_mu, -5, 5);
-            ImGui::SliderFloat("x sigma", &x_sigma, 0, 5);
-            xHeightMap = HeightMapNormal(mapWidth, x_mu, x_sigma);
+            ImGui::SliderFloat("mu", &x_mu, -5, 5);
+            ImGui::SliderFloat("sigma", &x_sigma, 0, 5);
+            xHeightMap = HeightMapNormal(mapWidth, x_range[0], x_range[1], x_mu, x_sigma);
             break;
         case EXPONENTIAL:
-            ImGui::SliderFloat("x lambda", &x_lambda, 0, 5);
-            xHeightMap = HeightMapExpo(mapWidth, x_lambda);
+            ImGui::SliderFloat("lambda", &x_lambda, 0, 5);
+            xHeightMap = HeightMapExpo(mapWidth, x_range[0], x_range[1], x_lambda);
             break;
         case GAMMA:
-            ImGui::SliderFloat("x alpha", &x_G_alpha, 0, 5);
-            ImGui::SliderFloat("x beta", &x_G_beta, 0, 5);
-            xHeightMap = HeightMapGamma(mapWidth, x_G_alpha, x_G_beta);
+            ImGui::SliderFloat("alpha", &x_G_alpha, 0, 5);
+            ImGui::SliderFloat("beta", &x_G_beta, 0, 5);
+            xHeightMap = HeightMapGamma(mapWidth, x_range[0], x_range[1], x_G_alpha, x_G_beta);
             break;
         case BETA:
-            ImGui::SliderFloat("x alpha", &x_B_alpha, 0, 5);
-            ImGui::SliderFloat("x beta", &x_B_beta, 0, 5);
-            xHeightMap = HeightMapBeta(mapWidth, x_B_alpha, x_B_beta);
+            ImGui::SliderFloat("alpha", &x_B_alpha, 0, 5);
+            ImGui::SliderFloat("beta", &x_B_beta, 0, 5);
+            xHeightMap = HeightMapBeta(mapWidth, x_range[0], x_range[1], x_B_alpha, x_B_beta);
             break;
         case CHISQUARED:
-            ImGui::SliderInt("x k", &x_k, 1, 10);
-            xHeightMap = HeightMapChiSq(mapWidth, x_k);
+            ImGui::SliderInt("k", &x_k, 1, 10);
+            xHeightMap = HeightMapChiSq(mapWidth, x_range[0], x_range[1], x_k);
             break;
         case TDIST:
-            ImGui::SliderFloat("x nu", &x_nu, 0, 10);
-            xHeightMap = HeightMapT(mapWidth, x_nu);
+            ImGui::SliderFloat("nu", &x_nu, 0, 10);
+            xHeightMap = HeightMapT(mapWidth, x_range[0], x_range[1], x_nu);
             break;
         case FDIST:
-            ImGui::SliderInt("x d1", &x_d1, 1, 50);
-            ImGui::SliderInt("x d2", &x_d2, 1, 50);
-            xHeightMap = HeightMapF(mapWidth, x_d1, x_d2);
+            ImGui::SliderInt("d1", &x_d1, 1, 50);
+            ImGui::SliderInt("d2", &x_d2, 1, 50);
+            xHeightMap = HeightMapF(mapWidth, x_range[0], x_range[1], x_d1, x_d2);
             break;
         }
         ImGui::End();
         
-        ImGui::Begin("Y parameters");
+        ImGui::Begin("Y controls");
         // let user choose the probabiltiy distribution function
-        ImGui::Text("y-axis Probability distribution Type:");
+        ImGui::Text("Probability distribution Type:");
         ImGui::RadioButton("Uniform", &yCurrMode, UNIFORM);
         ImGui::RadioButton("Normal", &yCurrMode, NORMAL);
         ImGui::RadioButton("Exponential", &yCurrMode, EXPONENTIAL);
@@ -274,44 +290,49 @@
         ImGui::RadioButton("Chi Sqaured", &yCurrMode, CHISQUARED);
         ImGui::RadioButton("T", &yCurrMode, TDIST);
         ImGui::RadioButton("F", &yCurrMode, FDIST);
+
+        ImGui::Spacing();
+        ImGui::Separator();
+
+        ImGui::Text("Distribution parameters");
         switch (yCurrMode) // display controls for current probability dist function and regenerate heightmap
         {
         case UNIFORM:
-            ImGui::SliderFloat("y start", &y_start, -5, 5);
-            ImGui::SliderFloat("y end", &y_end, -5, 5);
-            yHeightMap = HeightMapUniform(mapLength, y_start, y_end);
+            ImGui::SliderFloat("start", &y_start, -5, 5);
+            ImGui::SliderFloat("end", &y_end, -5, 5);
+            yHeightMap = HeightMapUniform(mapLength, y_range[0], y_range[1], y_start, y_end);
             break;
         case NORMAL:
-            ImGui::SliderFloat("y mu", &y_mu, -5, 5);
-            ImGui::SliderFloat("y sigma", &y_sigma, 0, 5);
-            yHeightMap = HeightMapNormal(mapLength, y_mu, y_sigma);
+            ImGui::SliderFloat("mu", &y_mu, -5, 5);
+            ImGui::SliderFloat("sigma", &y_sigma, 0, 5);
+            yHeightMap = HeightMapNormal(mapLength, y_range[0], y_range[1], y_mu, y_sigma);
             break;
         case EXPONENTIAL:
-            ImGui::SliderFloat("y lambda", &y_lambda, 0, 5);
-            yHeightMap = HeightMapExpo(mapLength, y_lambda);
+            ImGui::SliderFloat("lambda", &y_lambda, 0, 5);
+            yHeightMap = HeightMapExpo(mapLength, y_range[0], y_range[1], y_lambda);
             break;
         case GAMMA:
-            ImGui::SliderFloat("y alpha", &y_G_alpha, 0, 5);
-            ImGui::SliderFloat("y beta", &y_G_beta, 0, 5);
-            yHeightMap = HeightMapGamma(mapLength, y_G_alpha, y_G_beta);
+            ImGui::SliderFloat("alpha", &y_G_alpha, 0, 5);
+            ImGui::SliderFloat("beta", &y_G_beta, 0, 5);
+            yHeightMap = HeightMapGamma(mapLength, y_range[0], y_range[1], y_G_alpha, y_G_beta);
             break;
         case BETA:
-            ImGui::SliderFloat("y alpha", &y_B_alpha, 0, 5);
-            ImGui::SliderFloat("y beta", &y_B_beta, 0, 5);
-            yHeightMap = HeightMapBeta(mapLength, y_B_alpha, y_B_beta);
+            ImGui::SliderFloat("alpha", &y_B_alpha, 0, 5);
+            ImGui::SliderFloat("beta", &y_B_beta, 0, 5);
+            yHeightMap = HeightMapBeta(mapLength, y_range[0], y_range[1], y_B_alpha, y_B_beta);
             break;
         case CHISQUARED:
-            ImGui::SliderInt("y k", &y_k, 1, 10);
-            yHeightMap = HeightMapChiSq(mapLength, y_k);
+            ImGui::SliderInt("k", &y_k, 1, 10);
+            yHeightMap = HeightMapChiSq(mapLength, y_range[0], y_range[1], y_k);
             break;
         case TDIST:
-            ImGui::SliderFloat("y nu", &y_nu, 0, 10);
-            yHeightMap = HeightMapT(mapLength, y_nu);
+            ImGui::SliderFloat("nu", &y_nu, 0, 10);
+            yHeightMap = HeightMapT(mapLength, y_range[0], y_range[1], y_nu);
             break;
         case FDIST:
-            ImGui::SliderInt("y d1", &y_d1, 1, 50);
-            ImGui::SliderInt("y d2", &y_d2, 1, 50);
-            yHeightMap = HeightMapF(mapLength, y_d1, y_d2);
+            ImGui::SliderInt("d1", &y_d1, 1, 50);
+            ImGui::SliderInt("d2", &y_d2, 1, 50);
+            yHeightMap = HeightMapF(mapLength, y_range[0], y_range[1], y_d1, y_d2);
             break;
         }
         ImGui::End();

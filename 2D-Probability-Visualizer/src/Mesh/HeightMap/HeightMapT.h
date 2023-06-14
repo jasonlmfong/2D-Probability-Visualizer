@@ -7,8 +7,8 @@
 class HeightMapT : public HeightMap
 {
 public:
-	HeightMapT(int size);
-	HeightMapT(int size, double nu);
+	HeightMapT(int size, int min, int max);
+	HeightMapT(int size, int min, int max, double nu);
 
 	void Generate() override;
 private:

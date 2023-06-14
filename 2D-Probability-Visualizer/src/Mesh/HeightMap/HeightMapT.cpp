@@ -1,13 +1,13 @@
 #include "HeightMapT.h"
 
-HeightMapT::HeightMapT(int size)
-	: HeightMap(size), m_Nu(1)
+HeightMapT::HeightMapT(int size, int min, int max)
+	: HeightMap(size, min, max), m_Nu(1)
 {
 	Generate();
 }
 
-HeightMapT::HeightMapT(int size, double nu)
-	: HeightMap(size), m_Nu(nu)
+HeightMapT::HeightMapT(int size, int min, int max, double nu)
+	: HeightMap(size, min, max), m_Nu(nu)
 {
 	Generate();
 }
@@ -17,7 +17,7 @@ void HeightMapT::Generate()
 	for (int i = 0; i < m_Size; i++)
 	{
 		double ratio = (double)i / (m_Size - 1);
-		double pos = 20 * ratio - 10;
+		double pos = m_Diff * ratio + m_Min;
 		m_Map[i] = calcT(pos);
 	}
 }

@@ -1,13 +1,13 @@
 #include "HeightMapChiSq.h"
 
-HeightMapChiSq::HeightMapChiSq(int size)
-	: HeightMap(size), m_K(1)
+HeightMapChiSq::HeightMapChiSq(int size, int min, int max)
+	: HeightMap(size, min, max), m_K(1)
 {
 	Generate();
 }
 
-HeightMapChiSq::HeightMapChiSq(int size, int k)
-	: HeightMap(size), m_K(k)
+HeightMapChiSq::HeightMapChiSq(int size, int min, int max, int k)
+	: HeightMap(size, min, max), m_K(k)
 {
 	Generate();
 }
@@ -17,7 +17,7 @@ void HeightMapChiSq::Generate()
 	for (int i = 0; i < m_Size; i++)
 	{
 		double ratio = (double)i / (m_Size - 1);
-		double pos = 20 * ratio - 10;
+		double pos = m_Diff * ratio + m_Min;
 		m_Map[i] = calcChiSq(pos);
 	}
 }
