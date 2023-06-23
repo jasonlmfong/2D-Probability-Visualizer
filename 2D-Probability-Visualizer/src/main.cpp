@@ -24,7 +24,7 @@
 #include "Mesh/HeightMap/HeightMapF.h"
 #include "Mesh/Mesh.h"
 
-    int main()
+int main()
 {
     unsigned int screenWidth = 1440;
     unsigned int screenHeight = 810;
@@ -159,9 +159,18 @@
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
+    bool quit = false;
+    bool regenerate = false;
+
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(windowID))
+    while (!glfwWindowShouldClose(windowID) && !quit)
     {
+        // close the window
+        if (Input::IsKeyDown(GLFW_KEY_Q))
+        {
+            quit = true;
+        }
+
         // mouse movement
         glfwGetCursorPos(windowID, &currXpos, &currYpos);
         deltaX = (currXpos - lastXpos) / screenWidth;  // it is bounded by -1 and 1
