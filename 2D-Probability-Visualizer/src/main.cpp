@@ -75,6 +75,8 @@ int main()
 
     // wireframe mode
     bool wireframe = false;
+    // framerate mode
+    bool framerate = false;
 
     GLFWwindow* windowID = window.GetID();
     // input initialization
@@ -95,7 +97,6 @@ int main()
     ImGui::StyleColorsDark();
 
     bool quit = false;
-    bool regenerate = false;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(windowID) && !quit)
@@ -167,10 +168,11 @@ int main()
             else
                 glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // surface mode
         }
-        ImGui::End();
-
-        ImGui::Begin("Application insight");
-        ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+        ImGui::Checkbox("Framerate Tracker", &framerate);
+        if (framerate)
+        {
+            ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+        }
         ImGui::End();
 
         ImGui::Begin("X controls");
@@ -189,7 +191,7 @@ int main()
         ImGui::Separator();
 
         ImGui::Text("Distribution parameters");
-        switch (xNextVars.m_mode) // display controls for current probability dist function and regenerate heightmap
+        switch (xNextVars.m_mode) // display controls for current probability dist function
         {
         case UNIFORM:
             ImGui::SliderFloat("start", &xNextVars.m_uniform_start, -5, 5);
@@ -239,7 +241,7 @@ int main()
         ImGui::Separator();
 
         ImGui::Text("Distribution parameters");
-        switch (yNextVars.m_mode) // display controls for current probability dist function and regenerate heightmap
+        switch (yNextVars.m_mode) // display controls for current probability dist function
         {
         case UNIFORM:
             ImGui::SliderFloat("start", &yNextVars.m_uniform_start, -5, 5);
@@ -290,7 +292,6 @@ int main()
 
             xCurrVars = xNextVars;
             yCurrVars = yNextVars;
-            regenerate = false;
         }
 
         /* Swap front and back buffers */
