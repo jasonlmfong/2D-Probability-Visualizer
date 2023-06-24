@@ -93,6 +93,9 @@
     <ClCompile Include="src\Mesh\HeightMap\HeightMapF.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\frameVar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\external\glm\detail\_features.hpp">
@@ -1026,6 +1029,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Mesh\HeightMap\HeightMapF.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\frameVar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -27,6 +27,7 @@
     <ClCompile Include="src\external\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\external\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\frameVar.cpp" />
     <ClCompile Include="src\Mesh\HeightMap\HeightMap.cpp" />
     <ClCompile Include="src\Mesh\HeightMap\HeightMapBeta.cpp" />
     <ClCompile Include="src\Mesh\HeightMap\HeightMapChiSq.cpp" />
@@ -338,6 +339,7 @@
     <ClInclude Include="src\external\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\external\imgui\imstb_textedit.h" />
     <ClInclude Include="src\external\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\frameVar.h" />
     <ClInclude Include="src\HeightMap.h" />
     <ClInclude Include="src\HeightMapUniform.h" />
     <ClInclude Include="src\Mesh\HeightMap\HeightMapBeta.h" />
