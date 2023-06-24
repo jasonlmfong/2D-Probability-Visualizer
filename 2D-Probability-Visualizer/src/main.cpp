@@ -230,6 +230,10 @@ int main()
         }
         ImGui::End();
 
+        ImGui::Begin("Application insight");
+        ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+        ImGui::End();
+
         ImGui::Begin("X controls");
         // let user choose the probabiltiy distribution function
         ImGui::Text("Probability distribution Type:");
